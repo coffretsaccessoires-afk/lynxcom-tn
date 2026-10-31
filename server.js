@@ -424,6 +424,23 @@ const server = http.createServer(async (req, res) => {
     safePath = cleanRouteMap[safePath];
   }
 
+  // SECURITY (security-audit): Strictly block public access to data/db.json, config and server files
+  const lowerPath = safePath.toLowerCase();
+  if (
+    lowerPath.startsWith('/data') ||
+    lowerPath.startsWith('/.git') ||
+    lowerPath.startsWith('/.gemini') ||
+    lowerPath === '/package.json' ||
+    lowerPath === '/render.yaml' ||
+    lowerPath === '/server.js' ||
+    lowerPath.endsWith('.json') ||
+    lowerPath.endsWith('.bat')
+  ) {
+    res.writeHead(403, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Accès interdit aux ressources système.' }));
+    return;
+  }
+
   let filePath = path.join(ROOT, safePath);
 
   try {

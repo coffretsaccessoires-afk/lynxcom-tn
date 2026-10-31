@@ -118,14 +118,15 @@
   // Compute responsive scale so the full 560x440 3D rig fits any mobile/tablet screen cleanly
   function updateResponsiveScale() {
     isMobileView = window.innerWidth <= 768;
-    defaultRotX = isMobileView ? 8 : 12;
-    defaultRotY = isMobileView ? -8 : -18;
+    defaultRotX = isMobileView ? 6 : 12;
+    defaultRotY = isMobileView ? -6 : -18;
 
-    const availWidth = wrapper.clientWidth || window.innerWidth - 32;
-    if (availWidth < 640) {
-      rigScale = Math.max(0.48, Math.min(1, (availWidth - 12) / 620));
-      wrapper.style.minHeight = Math.round(460 * rigScale + 36) + 'px';
-      wrapper.style.height = Math.round(460 * rigScale + 36) + 'px';
+    const availWidth = wrapper.clientWidth || (window.innerWidth - 32);
+    if (availWidth < 620) {
+      rigScale = Math.max(0.46, Math.min(1, (availWidth - 12) / 560));
+      const targetH = Math.round(440 * rigScale + 24);
+      wrapper.style.minHeight = targetH + 'px';
+      wrapper.style.height = targetH + 'px';
     } else {
       rigScale = 1;
       wrapper.style.minHeight = '';

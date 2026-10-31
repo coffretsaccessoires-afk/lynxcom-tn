@@ -87,6 +87,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 72px;
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
 }
@@ -1283,17 +1284,17 @@ textarea.form-control {
     padding: 0 16px;
   }
   .header-inner {
-    height: 68px;
+    height: 62px;
   }
   .mobile-drawer {
-    top: 68px;
+    top: 62px;
     padding: 18px 16px 24px 16px;
   }
   .brand-logo-img {
-    height: 38px;
+    height: 35px;
   }
   .brand-tagline {
-    font-size: 9.5px;
+    display: none !important;
   }
   .main-nav,
   .header-actions .location-badge-tn,
@@ -1304,24 +1305,26 @@ textarea.form-control {
     gap: 8px;
   }
   .header-actions .btn-pill-yellow {
-    padding: 9px 16px;
-    font-size: 12.5px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
   }
   .mobile-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
     border-radius: 10px;
     background: #F8FAFC;
     border: 1px solid #E2E8F0;
   }
   .hero-section {
-    padding: 28px 0 44px 0;
+    padding: 24px 0 40px 0;
   }
   .hero-title {
-    font-size: clamp(26px, 7.2vw, 34px);
+    font-size: clamp(25px, 7vw, 34px);
     line-height: 1.16;
     letter-spacing: -0.6px;
     margin-bottom: 16px;
@@ -1340,34 +1343,34 @@ textarea.form-control {
   .hero-cta-group .btn-pill-yellow,
   .hero-cta-group .btn-pill-outline {
     width: 100%;
-    padding: 15px 24px;
-    font-size: 15px;
-    min-height: 50px;
+    padding: 14px 20px;
+    font-size: 14.5px;
+    min-height: 48px;
   }
   .section-padding {
-    padding: 56px 0;
+    padding: 50px 0;
   }
   .section-header {
-    margin-bottom: 36px;
+    margin-bottom: 32px;
   }
   .section-heading {
-    font-size: clamp(24px, 6.5vw, 32px) !important;
+    font-size: clamp(23px, 6.2vw, 30px) !important;
     line-height: 1.22;
   }
   .section-description {
     font-size: 15px !important;
   }
   .partners-section {
-    padding: 32px 0 40px 0;
+    padding: 28px 0 36px 0;
   }
   .partners-marquee {
     gap: 20px 28px;
   }
   .partner-logo-item {
-    font-size: 15px;
+    font-size: 14px;
   }
   .partner-logo-item svg {
-    height: 22px;
+    height: 20px;
   }
   .services-grid,
   .services-grid-4,
@@ -1375,37 +1378,45 @@ textarea.form-control {
   .reviews-grid-3,
   .values-grid-3 {
     grid-template-columns: 1fr !important;
-    gap: 20px !important;
+    gap: 18px !important;
   }
   .service-card {
-    padding: 26px 22px;
-  }
-  .showcase-floating-badge {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    margin-top: 14px;
-    width: 100%;
-  }
-  .calc-wrapper {
-    padding: 24px 18px;
-    gap: 28px;
-    border-radius: 22px;
-  }
-  .calc-results-card {
     padding: 24px 20px;
   }
+  .showcase-floating-badge {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 14px;
+    padding: 10px 14px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    margin-top: 0;
+  }
+  .calc-wrapper {
+    padding: 22px 16px;
+    gap: 24px;
+    border-radius: 20px;
+  }
+  .calc-results-card {
+    padding: 22px 18px;
+  }
   .calc-hero-num {
-    font-size: 32px;
+    font-size: 30px;
   }
   .contact-grid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 24px;
   }
   .contact-info-card,
   .contact-form-wrap {
-    padding: 28px 20px;
-    border-radius: 22px;
+    padding: 24px 18px;
+    border-radius: 20px;
   }
   .whatsapp-direct-btn {
     width: 100%;
@@ -1424,12 +1435,12 @@ textarea.form-control {
     padding: 13px 16px;
   }
   .site-footer {
-    padding: 52px 0 28px 0;
+    padding: 48px 0 24px 0;
   }
   .footer-top-grid {
     grid-template-columns: 1fr;
     gap: 28px;
-    margin-bottom: 36px;
+    margin-bottom: 32px;
   }
   .footer-bottom {
     flex-direction: column;
@@ -1444,15 +1455,15 @@ textarea.form-control {
 }
 
 @media (max-width: 420px) {
+  .container {
+    padding: 0 12px;
+  }
   .header-actions .btn-pill-yellow {
-    padding: 8px 13px;
-    font-size: 11.5px;
+    padding: 7px 11px;
+    font-size: 11px;
   }
   .brand-logo-img {
-    height: 34px;
-  }
-  .brand-tagline {
-    display: none;
+    height: 32px;
   }
 }
 

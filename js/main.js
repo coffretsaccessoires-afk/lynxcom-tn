@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
         <a href="technologie">Technologie & IA <span>→</span></a>
         <a href="ressources">Ressources & Simulateur ROI <span>→</span></a>
         <a href="a-propos">À propos de LynxCom (Sfax) <span>→</span></a>
-        <a href="admin">🔒 Espace Back-Office <span>→</span></a>
       </div>
       <div style="display:flex; flex-direction:column; gap:10px;">
         <a href="contact" class="btn-pill-yellow" style="width: 100%; text-align: center; padding: 14px;">Nous Contacter</a>

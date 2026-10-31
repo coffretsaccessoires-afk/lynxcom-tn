@@ -812,35 +812,81 @@
     max-width: 100%;
     min-height: 310px;
     perspective: 1100px;
-    overflow: visible;
+    overflow: hidden;
     padding: 10px 0;
+    border-radius: 20px;
   }
   .energy-halo-orbit {
-    width: 320px;
-    height: 220px;
+    width: 280px;
+    height: 190px;
   }
   .controls-7d-bar {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 18px;
-    width: 100%;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    margin-top: 18px !important;
+    width: 100% !important;
+    max-width: 440px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
   .mode-btn-7d {
-    justify-content: center;
-    padding: 10px 10px;
-    font-size: 11.5px;
-    min-height: 42px;
+    justify-content: center !important;
+    padding: 10px 8px !important;
+    font-size: 11.5px !important;
+    min-height: 44px !important;
+    border-radius: 12px !important;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  /* Keep satellite cards safely inside the chassis on mobile */
+  .satellite-card-adt {
+    left: 10px !important;
+    top: 70px !important;
+    transform: translateZ(40px) scale(0.9) !important;
+  }
+  .satellite-bottom-left {
+    left: 14px !important;
+    bottom: -8px !important;
+    transform: translateZ(50px) scale(0.9) !important;
+  }
+  .satellite-bottom-center {
+    left: 140px !important;
+    bottom: -12px !important;
+    transform: translateZ(50px) scale(0.88) !important;
+  }
+  .satellite-bottom-right {
+    right: 12px !important;
+    bottom: -8px !important;
+    transform: translateZ(50px) scale(0.9) !important;
+  }
+  .floating-3d-sphere,
+  .floating-network-nodes {
+    display: none !important;
+  }
+  #ambient-7d-canvas {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 440px) {
   .controls-7d-bar {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+  .mode-btn-7d {
+    font-size: 10.5px !important;
+    padding: 8px 6px !important;
+    min-height: 40px !important;
+  }
+  .mode-btn-7d .dot-indicator {
+    width: 5px !important;
+    height: 5px !important;
   }
 }
 
