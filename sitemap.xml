@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://lynxcom.tn/</loc>
+    <lastmod>2026-10-31T00:00:00+01:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="fr-TN" href="https://lynxcom.tn/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://lynxcom.tn/" />
+    <xhtml:link rel="alternate" hreflang="ar-TN" href="https://lynxcom.tn/ar/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lynxcom.tn/" />
+    <image:image>
+      <image:loc>https://lynxcom.tn/assets/LynxCom-logo.jpg</image:loc>
+      <image:title>LynxCom - Agence de Marketing Digital et SEO en Tunisie</image:title>
+      <image:caption>Logo officiel LynxCom Agence de Marketing Digital Tunisie</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://lynxcom.tn/#expertise</loc>
+    <lastmod>2026-10-31T00:00:00+01:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://lynxcom.tn/#etudes-de-cas</loc>
+    <lastmod>2026-10-31T00:00:00+01:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://lynxcom.tn/#technologie</loc>
+    <lastmod>2026-10-31T00:00:00+01:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lynxcom.tn/#simulateur</loc>
+    <lastmod>2026-10-31T00:00:00+01:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lynxcom.tn/#faq</loc>
+    <lastmod>2026-10-31T00:00:00+01:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lynxcom.tn/#contact</loc>
+    <lastmod>2026-10-31T00:00:00+01:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr-TN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Back-Office Administration & CRM | LynxCom Tunisie</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="/admin/style.css">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SCREEN 1: LOGIN WITH IDENTIFIANT, PASSWORD AND SECURITY CODE (PIN)
+       ========================================================================== -->
+  <div id="loginView" class="login-wrapper">
+    <div class="login-card">
+      <img src="/assets/logo-transparent.png" alt="LynxCom" class="login-logo">
+      <h1 class="login-title">Espace Administration</h1>
+      <p class="login-sub">Authentification à double facteur (Identifiants + Code PIN)</p>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="admUsername">Identifiant ou Email *</label>
+          <input type="text" id="admUsername" class="form-control" placeholder="admin ou admin@lynxcom.tn" value="admin" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label for="admPassword">Mot de Passe *</label>
+          <input type="password" id="admPassword" class="form-control" placeholder="••••••••••••" value="LynxCom2026!" required autocomplete="current-password">
+        </div>
+
+        <div class="form-group">
+          <label for="admPin">Code de Sécurité (Code PIN 6 chiffres) *</label>
+          <input type="text" id="admPin" class="form-control pin-input" placeholder="784219" maxlength="6" value="784219" required>
+        </div>
+
+        <button type="submit" class="btn-admin-submit" id="btnAdminLogin">
+          Déverrouiller le Back-Office
+        </button>
+
+        <div id="loginError" style="display:none; margin-top:14px; padding:10px; border-radius:8px; background:#FEE2E2; color:#991B1B; font-size:13px; font-weight:600; text-align:center;"></div>
+
+        <div class="login-hint-badge">
+          🔒 <strong>Accès sécurisé réservé à la direction :</strong><br>
+          • Identifiant : <code>admin</code><br>
+          • Mot de passe : <code>LynxCom2026!</code><br>
+          • Code de sécurité : <code>784219</code>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       SCREEN 2: BACK-OFFICE DASHBOARD & CRM LEADS
+       ========================================================================== -->
+  <div id="dashboardView" class="dashboard-layout">
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-brand">
+        <img src="/assets/logo-darkmode.png" alt="LynxCom" class="sidebar-logo">
+      </div>
+
+      <ul class="sidebar-menu">
+        <li><a href="#" class="sidebar-link active">📊 Gestion des Prospects</a></li>
+        <li><a href="/" target="_blank" class="sidebar-link">🌐 Voir le Site Web</a></li>
+      </ul>
+
+      <div class="admin-user-card">
+        <div>
+          <div style="font-size:13px; font-weight:800; color:#FFF;" id="sessionUserName">Direction LynxCom</div>
+          <div style="font-size:11px; color:#EBF817;">Super Administrateur</div>
+        </div>
+        <button id="btnLogout" class="btn-logout" title="Déconnexion">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Dashboard Area -->
+    <main class="admin-main">
+      
+      <header class="admin-header">
+        <div>
+          <h1>Tableau de Bord & CRM Prospects</h1>
+          <p style="font-size:14px; color:#64748B;">Suivi des demandes d'audit et opportunités d'affaires en Tunisie.</p>
+        </div>
+        <button id="btnExportCSV" class="btn-export-csv">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Exporter en CSV (Excel)
+        </button>
+      </header>
+
+      <!-- KPI Overview Cards -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-title">Total Demandes</div>
+          <div class="stat-card-value" id="kpiTotalLeads">0</div>
+        </div>
+        <div class="stat-card" style="border-top: 3px solid #EBF817;">
+          <div class="stat-card-title">Nouveaux Leads</div>
+          <div class="stat-card-value" id="kpiNewLeads" style="color:#B45309;">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-title">Pipeline Estimé (TND)</div>
+          <div class="stat-card-value" id="kpiPipeline">0 TND</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-title">Taux de Conversion</div>
+          <div class="stat-card-value" id="kpiConversion" style="color:#059669;">0%</div>
+        </div>
+      </section>
+
+      <!-- Toolbar: Search & Filter Pills -->
+      <div class="leads-toolbar">
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Rechercher un nom, société, tel...">
+        <div class="filter-pills">
+          <button class="filter-pill active" data-filter="all">Tous</button>
+          <button class="filter-pill" data-filter="nouveau">Nouveaux</button>
+          <button class="filter-pill" data-filter="en_cours">En cours</button>
+          <button class="filter-pill" data-filter="converti">Convertis</button>
+        </div>
+      </div>
+
+      <!-- Leads Table -->
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Réf / Date</th>
+              <th>Contact & Société</th>
+              <th>Téléphone Tunisie</th>
+              <th>Objectif & Budget</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="leadsTableBody">
+            <tr><td colspan="6" style="text-align:center; padding:30px;">Chargement des prospects...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/admin/admin.js"></script>
+</body>
+</html>

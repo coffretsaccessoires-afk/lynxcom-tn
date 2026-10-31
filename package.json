@@ -1,0 +1,21 @@
+{
+  "name": "lynxcom-tunisie",
+  "version": "1.0.0",
+  "description": "Site Web Officiel & Back-Office CRM LynxCom Tunisie - Agence de Marketing Digital et SEO",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "marketing",
+    "tunisie",
+    "sfax",
+    "seo",
+    "lynxcom"
+  ],
+  "author": "LynxCom Tunisie",
+  "license": "ISC"
+}

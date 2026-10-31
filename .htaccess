@@ -1,0 +1,52 @@
+# ==============================================================================
+# LYNXCOM SECURITY HARDENING CONFIGURATION (.htaccess)
+# Designed in accordance with OWASP and Security Audit Standards
+# ==============================================================================
+
+# 1. Prevent Directory Browsing
+Options -Indexes
+
+# 2. Block Access to Hidden & Sensitive Files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# 3. HTTP Security Headers
+<IfModule mod_headers.c>
+    # Enforce HTTPS with HSTS (1 year + preload)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" env=HTTPS
+    
+    # Prevent Clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Prevent MIME Sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Enable XSS Filter
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Restrict Hardware Permissions
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+</IfModule>
+
+# 4. Enable Gzip / Brotli Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+# 5. Browser Caching for Performance & Core Web Vitals
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType text/html "access plus 0 seconds"
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
+

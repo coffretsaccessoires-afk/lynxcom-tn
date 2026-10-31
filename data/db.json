@@ -1,0 +1,91 @@
+{
+  "admin": {
+    "username": "admin",
+    "email": "admin@lynxcom.tn",
+    "password": "LynxCom2026!",
+    "securityCode": "784219",
+    "name": "Direction LynxCom",
+    "role": "Super Admin"
+  },
+  "leads": [
+    {
+      "id": "LC-1005",
+      "name": "Sami Mansour",
+      "company": "Groupe Agroalimentaire Tunis",
+      "phone": "+216 71 800 900",
+      "email": "s.mansour@agro-tunis.tn",
+      "objective": "ecommerce",
+      "objectiveLabel": "E-Commerce & Ventes",
+      "budget": "10 000 TND",
+      "message": "Test automatique d acquisition lead.",
+      "status": "nouveau",
+      "notes": "",
+      "createdAt": "2026-10-31T00:30:53.503Z",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "LC-1001",
+      "name": "Mohamed Ben Romdhane",
+      "company": "Tunisie Mode & Textile",
+      "phone": "+216 98 123 456",
+      "email": "m.benromdhane@mode.tn",
+      "objective": "ecommerce",
+      "objectiveLabel": "E-Commerce & Ventes",
+      "budget": "8 000 TND",
+      "message": "Bonjour, nous voulons restructurer nos campagnes Meta Ads et améliorer notre ROI pour nos 3 marques de prêt-à-porter en Tunisie.",
+      "status": "nouveau",
+      "notes": "Entreprise avec fort potentiel. À rappeler lundi matin.",
+      "createdAt": "2026-10-30T14:22:00Z",
+      "ip": "197.1.152.99"
+    },
+    {
+      "id": "LC-1002",
+      "name": "Amira Khemir",
+      "company": "Fintech Carthage",
+      "phone": "+216 22 789 012",
+      "email": "amira@fintech-carthage.tn",
+      "objective": "leads",
+      "objectiveLabel": "Génération de Leads B2B",
+      "budget": "5 500 TND",
+      "message": "Besoin d'une stratégie de content marketing et LinkedIn Ads pour cibler les DAF et Directeurs Généraux en Tunisie et au Maroc.",
+      "status": "en_cours",
+      "notes": "Premier échange positif, proposition commerciale envoyée par email.",
+      "createdAt": "2026-10-29T10:15:00Z",
+      "ip": "196.229.110.45"
+    },
+    {
+      "id": "LC-1003",
+      "name": "Dr. Yassine Trabelsi",
+      "company": "Polyclinique Internationale Tunis",
+      "phone": "+216 55 456 789",
+      "email": "direction@clinique-tunis.tn",
+      "objective": "seo",
+      "objectiveLabel": "SEO & Référencement Google",
+      "budget": "12 000 TND",
+      "message": "Nous souhaitons dominer la première page de Google sur le tourisme médical et les chirurgies spécialisées depuis la France et la Suisse.",
+      "status": "converti",
+      "notes": "Contrat signé sur 12 mois. Démarrage de l'audit technique SEO.",
+      "createdAt": "2026-10-28T16:40:00Z",
+      "ip": "41.226.14.78"
+    },
+    {
+      "id": "LC-1004",
+      "name": "Sarra Bouazizi",
+      "company": "Retail & Superstores TN",
+      "phone": "+216 29 333 444",
+      "email": "s.bouazizi@retail-tn.com",
+      "objective": "ads",
+      "objectiveLabel": "Campagnes Google & Meta Ads",
+      "budget": "15 000 TND",
+      "message": "Lancement d'une chaîne de distribution avec 6 magasins à Tunis, Sousse et Sfax. Besoin d'une campagne de notoriété et drive-to-store.",
+      "status": "nouveau",
+      "notes": "Demande reçue via le simulateur de ROI.",
+      "createdAt": "2026-10-31T00:10:00Z",
+      "ip": "197.0.24.120"
+    }
+  ],
+  "stats": {
+    "totalVisitors": 4820,
+    "conversionRate": 3.8
+  }
+}

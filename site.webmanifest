@@ -1,0 +1,16 @@
+{
+  "name": "LynxCom - Agence de Marketing Digital Tunisie",
+  "short_name": "LynxCom",
+  "description": "Agence N°1 de marketing digital et SEO axé sur la data en Tunisie",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#EAF800",
+  "icons": [
+    {
+      "src": "/assets/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    }
+  ]
+}

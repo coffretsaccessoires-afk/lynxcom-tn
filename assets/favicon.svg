@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="lynxYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFF33" />
+      <stop offset="100%" stop-color="#E2F000" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#0A0D14"/>
+  <!-- Speed streaks -->
+  <line x1="8" y1="28" x2="32" y2="28" stroke="url(#lynxYellow)" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+  <line x1="14" y1="34" x2="36" y2="34" stroke="url(#lynxYellow)" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+  <line x1="10" y1="40" x2="28" y2="40" stroke="url(#lynxYellow)" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <!-- Stylized Lynx Silhouette -->
+  <path d="M 28 20 
+           C 30 14, 34 10, 36 8 
+           C 37 12, 38 16, 40 18 
+           C 43 14, 46 11, 48 9 
+           C 48 14, 47 18, 45 22 
+           C 51 22, 55 25, 57 29 
+           C 54 31, 50 31, 47 30 
+           C 50 33, 53 36, 54 40 
+           C 50 39, 47 37, 44 34 
+           C 43 38, 42 42, 40 46 
+           C 37 42, 35 38, 34 32
+           C 30 32, 28 28, 28 20 Z" 
+        fill="url(#lynxYellow)" filter="url(#glow)"/>
+  <!-- Lynx Eye -->
+  <polygon points="43,23 46,24 43,26" fill="#0A0D14" />
+</svg>

@@ -1,0 +1,872 @@
+/* ==========================================================================
+   LYNXCOM 7D RELIEF ENGINE STYLESHEET
+   Hyper-realistic 3D isometric relief dashboard with depth layers,
+   specular lighting, extruded 3D bars, holographic glows, and interactive parallax.
+   ========================================================================== */
+
+:root {
+  --neon-yellow: #EBF817;
+  --neon-yellow-glow: rgba(235, 248, 23, 0.55);
+  --neon-yellow-subtle: rgba(235, 248, 23, 0.15);
+  --dark-charcoal: #0B0F19;
+  --card-bg: rgba(255, 255, 255, 0.88);
+  --card-border: rgba(255, 255, 255, 0.95);
+  --card-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.12), 0 0 40px rgba(235, 248, 23, 0.22);
+  --bar-front: linear-gradient(180deg, #FFF740 0%, #EBF817 60%, #D4E00A 100%);
+  --bar-top: #FFFF7A;
+  --bar-side: #B8C200;
+}
+
+/* 7D Viewport & Perspective Stage */
+.stage-7d-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  min-height: 580px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+  user-select: none;
+  margin: 0 auto;
+}
+
+/* Ambient 3D Particle & Ring WebGL Canvas */
+#ambient-7d-canvas {
+  position: absolute;
+  top: -15%;
+  left: -15%;
+  width: 130%;
+  height: 130%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Neon Yellow Energy Halo / Vortex (Matches Template) */
+.energy-halo-orbit {
+  position: absolute;
+  width: 580px;
+  height: 380px;
+  border-radius: 50%;
+  border: 4px solid var(--neon-yellow);
+  box-shadow: 0 0 50px var(--neon-yellow), inset 0 0 40px var(--neon-yellow);
+  transform: rotateX(65deg) rotateY(-22deg) rotateZ(18deg);
+  opacity: 0.65;
+  filter: blur(1px);
+  pointer-events: none;
+  z-index: 2;
+  animation: haloPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes haloPulse {
+  0% {
+    transform: rotateX(65deg) rotateY(-22deg) rotateZ(18deg) scale(0.96);
+    opacity: 0.5;
+    filter: blur(1.5px);
+  }
+  100% {
+    transform: rotateX(65deg) rotateY(-22deg) rotateZ(18deg) scale(1.04);
+    opacity: 0.85;
+    filter: blur(0.5px);
+  }
+}
+
+/* 3D Transform Rig (Driven by Mouse & Gyroscope in JS) */
+.rig-7d {
+  position: relative;
+  width: 560px;
+  height: 440px;
+  transform-style: preserve-3d;
+  transform: rotateX(12deg) rotateY(-18deg) rotateZ(2deg);
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 5;
+}
+
+/* Main Dashboard Chassis - Layer 1 (Z: 0px) */
+.dashboard-chassis {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 28px;
+  border: 1.5px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  padding: 24px 26px;
+  transform-style: preserve-3d;
+  transform: translateZ(0px);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Subtle holographic sheen on chassis surface */
+.dashboard-chassis::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 28px;
+  background: radial-gradient(circle at var(--light-x, 70%) var(--light-y, 30%), rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 65%);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Top bar: Brand Mini Logo, Search, Notification, Profile */
+.chassis-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  transform: translateZ(25px);
+  transform-style: preserve-3d;
+}
+
+.mini-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mini-logo-img {
+  height: 24px;
+  width: auto;
+}
+
+.mini-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #F1F4F9;
+  border-radius: 20px;
+  padding: 6px 14px;
+  width: 190px;
+  font-size: 12px;
+  color: #718096;
+  border: 1px solid #E2E8F0;
+  transition: all 0.2s;
+}
+
+.mini-search svg {
+  width: 14px;
+  height: 14px;
+  stroke: #718096;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-icon-btn {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #F1F4F9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.action-icon-btn svg {
+  width: 16px;
+  height: 16px;
+  color: #4A5568;
+}
+
+.action-icon-btn .badge-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background: var(--neon-yellow);
+  border: 2px solid #FFF;
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--neon-yellow);
+}
+
+.avatar-chip {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #CBD5E1, #94A3B8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1E293B;
+  border: 2px solid #FFF;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Main Dashboard Body: Left Chart + Right KPIs */
+.chassis-content {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 18px;
+  flex: 1;
+  transform-style: preserve-3d;
+}
+
+/* Left Section: "Analyse de données" */
+.chart-section {
+  position: relative;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.6), 0 8px 20px rgba(0, 0, 0, 0.03);
+  transform-style: preserve-3d;
+  transform: translateZ(20px);
+  display: flex;
+  flex-direction: column;
+}
+
+.section-title-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.section-badge {
+  font-size: 10px;
+  font-weight: 600;
+  background: #ECFDF5;
+  color: #059669;
+  padding: 3px 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.section-badge .pulse-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10B981;
+  animation: pulseGreen 1.5s infinite;
+}
+
+@keyframes pulseGreen {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.4); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+/* THE 3D RELIEF BAR CHART CONTAINER */
+.bar-chart-3d-stage {
+  position: relative;
+  height: 160px;
+  margin-top: 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 10px 10px 10px;
+  transform-style: preserve-3d;
+  border-bottom: 1px dashed #E2E8F0;
+}
+
+/* Background grid lines for depth */
+.chart-grid-depth {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.grid-line {
+  width: 100%;
+  height: 1px;
+  background: #CBD5E1;
+}
+
+/* INDIVIDUAL 3D EXTRUDED COLUMN */
+.bar-3d-column {
+  position: relative;
+  width: 28px;
+  height: var(--bar-height, 60%);
+  transform-style: preserve-3d;
+  transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  transform: translateZ(30px);
+}
+
+.bar-3d-column:hover {
+  filter: brightness(1.12);
+}
+
+/* Front Face */
+.bar-face-front {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bar-front);
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 10px 20px rgba(235, 248, 23, 0.3);
+  transform-style: preserve-3d;
+}
+
+/* Top Face (3D Cap) */
+.bar-face-top {
+  position: absolute;
+  top: -8px;
+  left: 4px;
+  width: 100%;
+  height: 8px;
+  background: var(--bar-top);
+  transform: skewX(-45deg);
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 -2px 6px rgba(255, 255, 255, 0.8);
+}
+
+/* Side Face (Extruded Relief Depth) */
+.bar-face-side {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  width: 8px;
+  height: 100%;
+  background: var(--bar-side);
+  transform: skewY(-45deg);
+  border-radius: 0 4px 0 0;
+}
+
+/* Tooltip on 3D Bar */
+.bar-tooltip {
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  transform: translateX(-50%) translateZ(40px);
+  background: #0F172A;
+  color: #FFF;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.bar-3d-column:hover .bar-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-6px) translateZ(50px);
+}
+
+/* 3D GLOWING UPWARD TREND ARROW (Curving across bars to top-right) */
+.svg-trend-arrow-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: translateZ(55px);
+  overflow: visible;
+  z-index: 10;
+}
+
+.trend-arrow-path {
+  fill: none;
+  stroke: #EBF817;
+  stroke-width: 5;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 10px rgba(235, 248, 23, 0.95)) drop-shadow(0 0 20px rgba(235, 248, 23, 0.5));
+  stroke-dasharray: 400;
+  stroke-dashoffset: 0;
+  animation: drawArrow 2s ease-out;
+}
+
+@keyframes drawArrow {
+  from { stroke-dashoffset: 400; }
+  to { stroke-dashoffset: 0; }
+}
+
+.trend-arrow-head {
+  fill: #EBF817;
+  filter: drop-shadow(0 0 12px rgba(235, 248, 23, 1));
+}
+
+/* Right Section: KPIs Card */
+.kpi-section {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.6), 0 8px 20px rgba(0, 0, 0, 0.03);
+  transform-style: preserve-3d;
+  transform: translateZ(28px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.kpi-big-stat {
+  margin: 10px 0;
+}
+
+.kpi-number {
+  font-size: 38px;
+  font-weight: 900;
+  color: #0F172A;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.kpi-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+/* Progress meters inside KPI */
+.kpi-meters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.meter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meter-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.meter-bar-track {
+  width: 100%;
+  height: 7px;
+  background: #E2E8F0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.meter-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.meter-bar-fill.fill-trend {
+  width: 100%;
+  background: var(--neon-yellow);
+  box-shadow: 0 0 10px rgba(235, 248, 23, 0.7);
+}
+
+.meter-bar-fill.fill-brand {
+  width: 90%;
+  background: #0F172A;
+}
+
+/* ==========================================================================
+   SATELLITE FLOATING CARDS & 3D RELIEF ORBS (Layers Z: 60px to 100px)
+   ========================================================================== */
+
+/* Floating Card 1: Top-Left Area Chart (+49% ADT1) */
+.satellite-card-adt {
+  position: absolute;
+  top: 80px;
+  left: -40px;
+  width: 120px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 10px 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 0 25px rgba(235, 248, 23, 0.2);
+  transform: translateZ(75px) rotateY(-8deg);
+  transform-style: preserve-3d;
+  z-index: 15;
+  animation: floatSubtle1 5s ease-in-out infinite alternate;
+}
+
+.adt-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  color: #0F172A;
+  background: var(--neon-yellow);
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.adt-chart-svg {
+  width: 100%;
+  height: 38px;
+}
+
+.adt-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #94A3B8;
+  text-align: right;
+  margin-top: 2px;
+}
+
+/* Floating Card 2: Bottom-Left KPI summary */
+.satellite-bottom-left {
+  position: absolute;
+  bottom: -28px;
+  left: 30px;
+  width: 135px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 10px 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.14), 0 0 25px rgba(235, 248, 23, 0.25);
+  transform: translateZ(90px) rotateX(4deg);
+  z-index: 16;
+  animation: floatSubtle2 6s ease-in-out infinite alternate;
+}
+
+.sat-kpi-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sat-kpi-value {
+  font-size: 22px;
+  font-weight: 900;
+  color: #0F172A;
+  letter-spacing: -0.5px;
+}
+
+.sat-kpi-sub {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94A3B8;
+}
+
+/* Floating Card 3: Bottom-Center Equalizer (Aperçus de données) */
+.satellite-bottom-center {
+  position: absolute;
+  bottom: -32px;
+  left: 185px;
+  width: 170px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 10px 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.14);
+  transform: translateZ(85px);
+  z-index: 15;
+  animation: floatSubtle1 6.5s ease-in-out infinite alternate 1s;
+}
+
+.sat-eq-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 34px;
+  margin-top: 8px;
+}
+
+.sat-bar {
+  flex: 1;
+  background: #CBD5E1;
+  border-radius: 3px;
+  transition: height 0.4s ease;
+}
+
+.sat-bar.active {
+  background: var(--neon-yellow);
+  box-shadow: 0 0 8px rgba(235, 248, 23, 0.8);
+}
+
+/* Floating Card 4: Bottom-Right Audience Reach */
+.satellite-bottom-right {
+  position: absolute;
+  bottom: -20px;
+  right: -25px;
+  width: 175px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 10px 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.14), 0 0 30px rgba(235, 248, 23, 0.2);
+  transform: translateZ(95px) rotateY(-5deg);
+  z-index: 17;
+  animation: floatSubtle2 5.5s ease-in-out infinite alternate 0.5s;
+}
+
+.sat-wave-svg {
+  width: 100%;
+  height: 32px;
+  margin-top: 6px;
+}
+
+/* Floating 3D Faceted Crystal Sphere (Right side of template) */
+.floating-3d-sphere {
+  position: absolute;
+  top: 140px;
+  right: -45px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #FFFFFF 0%, #E2E8F0 50%, #94A3B8 100%);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.18), inset -3px -3px 8px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.9);
+  transform: translateZ(105px);
+  z-index: 18;
+  animation: sphereOrbit 7s ease-in-out infinite alternate;
+}
+
+/* Floating Network Graph Nodes (Top-left of template) */
+.floating-network-nodes {
+  position: absolute;
+  top: -20px;
+  left: 20px;
+  transform: translateZ(60px);
+  pointer-events: none;
+  z-index: 12;
+}
+
+.node-svg {
+  width: 140px;
+  height: 90px;
+  opacity: 0.85;
+}
+
+/* Floating Keyframes */
+@keyframes floatSubtle1 {
+  0% { transform: translateZ(75px) translateY(0px) rotateY(-8deg); }
+  100% { transform: translateZ(75px) translateY(-10px) rotateY(-6deg); }
+}
+
+@keyframes floatSubtle2 {
+  0% { transform: translateZ(90px) translateY(0px) rotateX(4deg); }
+  100% { transform: translateZ(90px) translateY(-8px) rotateX(2deg); }
+}
+
+@keyframes sphereOrbit {
+  0% { transform: translateZ(105px) translateY(0px) rotate(0deg); }
+  100% { transform: translateZ(105px) translateY(-14px) rotate(45deg); }
+}
+
+/* ==========================================================================
+   7D INTERACTIVE CONTROLS (Hyper-State Switching)
+   ========================================================================== */
+.controls-7d-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 36px;
+  z-index: 20;
+  position: relative;
+}
+
+.mode-btn-7d {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.mode-btn-7d:hover {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.mode-btn-7d.active {
+  background: var(--neon-yellow);
+  color: #0F172A;
+  border-color: var(--neon-yellow);
+  box-shadow: 0 0 20px rgba(235, 248, 23, 0.6);
+  transform: translateY(-2px);
+}
+
+.mode-btn-7d .dot-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #94A3B8;
+  transition: background 0.2s;
+}
+
+.mode-btn-7d.active .dot-indicator {
+  background: #0F172A;
+}
+
+/* 7D Dimension indicator pill */
+.badge-7d-tech {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 12px;
+}
+
+.badge-7d-tech span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-yellow);
+  box-shadow: 0 0 8px var(--neon-yellow);
+  animation: pulseNeon 2s infinite;
+}
+
+@keyframes pulseNeon {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* ==========================================================================
+   RESPONSIVE OPTIMIZATIONS
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .stage-7d-wrapper {
+    max-width: 520px;
+    min-height: 480px;
+  }
+  .rig-7d {
+    width: 480px;
+    height: 380px;
+  }
+  .satellite-bottom-right {
+    right: -10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stage-7d-wrapper {
+    max-width: 100%;
+    min-height: 440px;
+    perspective: 900px;
+  }
+  .rig-7d {
+    width: 360px;
+    height: 320px;
+    transform: rotateX(8deg) rotateY(-8deg) scale(0.9);
+  }
+  .chassis-topbar .mini-search {
+    width: 110px;
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  .chassis-content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .kpi-section {
+    display: none; /* Streamline on small mobile to keep 3D bars hero-focused */
+  }
+  .satellite-card-adt {
+    left: -15px;
+    top: 50px;
+    transform: scale(0.85) translateZ(50px);
+  }
+  .satellite-bottom-right {
+    display: none;
+  }
+  .satellite-bottom-center {
+    display: none;
+  }
+  .satellite-bottom-left {
+    bottom: -15px;
+    left: 10px;
+    transform: scale(0.85) translateZ(60px);
+  }
+  .energy-halo-orbit {
+    width: 380px;
+    height: 280px;
+  }
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  .energy-halo-orbit,
+  .satellite-card-adt,
+  .satellite-bottom-left,
+  .satellite-bottom-center,
+  .satellite-bottom-right,
+  .floating-3d-sphere,
+  .bar-3d-column {
+    animation: none !important;
+    transition: none !important;
+  }
+  .rig-7d {
+    transition: none !important;
+  }
+}
