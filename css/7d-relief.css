@@ -793,64 +793,54 @@
 }
 
 /* ==========================================================================
-   RESPONSIVE OPTIMIZATIONS
+   RESPONSIVE OPTIMIZATIONS (60FPS Proportional 3D Stage Scaling)
    ========================================================================== */
+.rig-7d {
+  will-change: transform;
+  transform-origin: center center;
+}
+
 @media (max-width: 1024px) {
   .stage-7d-wrapper {
-    max-width: 520px;
-    min-height: 480px;
-  }
-  .rig-7d {
-    width: 480px;
-    height: 380px;
-  }
-  .satellite-bottom-right {
-    right: -10px;
+    max-width: 100%;
+    min-height: 440px;
   }
 }
 
 @media (max-width: 768px) {
   .stage-7d-wrapper {
     max-width: 100%;
-    min-height: 440px;
-    perspective: 900px;
-  }
-  .rig-7d {
-    width: 360px;
-    height: 320px;
-    transform: rotateX(8deg) rotateY(-8deg) scale(0.9);
-  }
-  .chassis-topbar .mini-search {
-    width: 110px;
-    font-size: 10px;
-    padding: 4px 8px;
-  }
-  .chassis-content {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  .kpi-section {
-    display: none; /* Streamline on small mobile to keep 3D bars hero-focused */
-  }
-  .satellite-card-adt {
-    left: -15px;
-    top: 50px;
-    transform: scale(0.85) translateZ(50px);
-  }
-  .satellite-bottom-right {
-    display: none;
-  }
-  .satellite-bottom-center {
-    display: none;
-  }
-  .satellite-bottom-left {
-    bottom: -15px;
-    left: 10px;
-    transform: scale(0.85) translateZ(60px);
+    min-height: 310px;
+    perspective: 1100px;
+    overflow: visible;
+    padding: 10px 0;
   }
   .energy-halo-orbit {
-    width: 380px;
-    height: 280px;
+    width: 320px;
+    height: 220px;
+  }
+  .controls-7d-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 18px;
+    width: 100%;
+  }
+  .mode-btn-7d {
+    justify-content: center;
+    padding: 10px 10px;
+    font-size: 11.5px;
+    min-height: 42px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 400px) {
+  .controls-7d-bar {
+    grid-template-columns: 1fr;
   }
 }
 

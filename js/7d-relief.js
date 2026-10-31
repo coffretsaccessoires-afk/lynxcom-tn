@@ -100,73 +100,113 @@
   };
 
   let currentMode = "roi";
-  let targetRotX = 12;
-  let targetRotY = -18;
-  let currentRotX = 12;
-  let currentRotY = -18;
-  let isHovered = false;
+  let isMobileView = window.innerWidth <= 768;
+  let defaultRotX = isMobileView ? 8 : 12;
+  let defaultRotY = isMobileView ? -8 : -18;
+  let targetRotX = defaultRotX;
+  let targetRotY = defaultRotY;
+  let currentRotX = defaultRotX;
+  let currentRotY = defaultRotY;
+  let rigScale = 1;
+  let isInViewport = true;
 
   const wrapper = document.querySelector('.stage-7d-wrapper');
   const rig = document.querySelector('.rig-7d');
 
   if (!wrapper || !rig) return;
 
-  // --- Parallax 6-DoF Physics Engine ---
-  function onMouseMove(e) {
-    isHovered = true;
+  // Compute responsive scale so the full 560x440 3D rig fits any mobile/tablet screen cleanly
+  function updateResponsiveScale() {
+    isMobileView = window.innerWidth <= 768;
+    defaultRotX = isMobileView ? 8 : 12;
+    defaultRotY = isMobileView ? -8 : -18;
+
+    const availWidth = wrapper.clientWidth || window.innerWidth - 32;
+    if (availWidth < 640) {
+      rigScale = Math.max(0.48, Math.min(1, (availWidth - 12) / 620));
+      wrapper.style.minHeight = Math.round(460 * rigScale + 36) + 'px';
+      wrapper.style.height = Math.round(460 * rigScale + 36) + 'px';
+    } else {
+      rigScale = 1;
+      wrapper.style.minHeight = '';
+      wrapper.style.height = '';
+    }
+  }
+  updateResponsiveScale();
+  window.addEventListener('resize', updateResponsiveScale, { passive: true });
+
+  // Pause 3D loop when scrolled out of view for 60FPS scroll smoothness on mobile
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isInViewport = entry.isIntersecting;
+      });
+    }, { threshold: 0.05 });
+    io.observe(wrapper);
+  }
+
+  // --- Parallax 6-DoF Physics Engine (Mouse & Touch) ---
+  function handlePointerMove(clientX, clientY) {
     const rect = wrapper.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left - rect.width / 2;
-    const mouseY = e.clientY - rect.top - rect.height / 2;
+    const relX = clientX - rect.left - rect.width / 2;
+    const relY = clientY - rect.top - rect.height / 2;
 
-    // Normalize coordinates (-1 to 1)
-    const normX = mouseX / (rect.width / 2);
-    const normY = mouseY / (rect.height / 2);
+    const normX = Math.max(-1, Math.min(1, relX / (rect.width / 2)));
+    const normY = Math.max(-1, Math.min(1, relY / (rect.height / 2)));
 
-    // Dynamic rotation limits for realistic 3D feel
-    targetRotY = -18 + normX * 18; // Yaw between -36 and 0 deg
-    targetRotX = 12 - normY * 16;  // Pitch between -4 and 28 deg
+    targetRotY = defaultRotY + normX * (isMobileView ? 12 : 18);
+    targetRotX = defaultRotX - normY * (isMobileView ? 10 : 16);
 
-    // Update specular lighting position on chassis
     const lightX = 50 + normX * 40;
     const lightY = 50 + normY * 40;
     rig.style.setProperty('--light-x', `${lightX}%`);
     rig.style.setProperty('--light-y', `${lightY}%`);
   }
 
-  function onMouseLeave() {
-    isHovered = false;
-    targetRotX = 12;
-    targetRotY = -18;
+  function onMouseMove(e) {
+    handlePointerMove(e.clientX, e.clientY);
+  }
+
+  function onPointerReset() {
+    targetRotX = defaultRotX;
+    targetRotY = defaultRotY;
     rig.style.setProperty('--light-x', '70%');
     rig.style.setProperty('--light-y', '30%');
   }
 
-  wrapper.addEventListener('mousemove', onMouseMove);
-  wrapper.addEventListener('mouseleave', onMouseLeave);
+  wrapper.addEventListener('mousemove', onMouseMove, { passive: true });
+  wrapper.addEventListener('mouseleave', onPointerReset, { passive: true });
+
+  // Touch drag support on mobile
+  wrapper.addEventListener('touchmove', function (e) {
+    if (e.touches && e.touches.length === 1) {
+      handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: true });
+  wrapper.addEventListener('touchend', onPointerReset, { passive: true });
 
   // --- Mobile Gyroscope DeviceOrientation Support ---
   if (window.DeviceOrientationEvent && window.matchMedia('(max-width: 768px)').matches) {
     window.addEventListener('deviceorientation', function (e) {
       if (e.gamma !== null && e.beta !== null) {
-        // gamma is left-to-right [-90,90], beta is front-to-back [-180,180]
         const tiltX = Math.min(Math.max(e.gamma, -25), 25);
         const tiltY = Math.min(Math.max(e.beta - 45, -25), 25);
-        targetRotY = -10 + (tiltX / 25) * 12;
-        targetRotX = 8 + (tiltY / 25) * 10;
+        targetRotY = defaultRotY + (tiltX / 25) * 10;
+        targetRotX = defaultRotX + (tiltY / 25) * 8;
       }
     }, { passive: true });
   }
 
   // --- Smooth Physics Render Loop (Lerp Animation) ---
   function updatePhysics() {
-    // Easing factor (lerp)
-    const ease = 0.08;
-    currentRotX += (targetRotX - currentRotX) * ease;
-    currentRotY += (targetRotY - currentRotY) * ease;
+    if (isInViewport) {
+      const ease = 0.09;
+      currentRotX += (targetRotX - currentRotX) * ease;
+      currentRotY += (targetRotY - currentRotY) * ease;
+      const rotZ = isMobileView ? 1 : 2;
 
-    // Apply transform to the 3D rig
-    rig.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg) rotateZ(2deg)`;
-
+      rig.style.transform = `scale(${rigScale.toFixed(3)}) rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg) rotateZ(${rotZ}deg)`;
+    }
     requestAnimationFrame(updatePhysics);
   }
   requestAnimationFrame(updatePhysics);

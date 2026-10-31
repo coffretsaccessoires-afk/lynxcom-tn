@@ -391,3 +391,116 @@ tbody tr:hover {
   background: #1EBE5D;
 }
 
+/* ==============================================================================
+   MOBILE & TABLET RESPONSIVENESS (100% Mobile Friendly Back-Office)
+   ============================================================================== */
+@media (max-width: 960px) {
+  .dashboard-layout.active {
+    flex-direction: column;
+  }
+  .admin-sidebar {
+    width: 100%;
+    padding: 14px 18px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .sidebar-brand {
+    margin-bottom: 0;
+  }
+  .sidebar-menu {
+    flex-direction: row;
+    flex: initial;
+    gap: 6px;
+  }
+  .sidebar-link {
+    padding: 8px 12px;
+    font-size: 12.5px;
+  }
+  .admin-user-card {
+    padding-top: 0;
+    border-top: none;
+    gap: 10px;
+  }
+  .admin-main {
+    padding: 20px 16px;
+  }
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .admin-header h1 {
+    font-size: 21px;
+  }
+  .btn-export-csv {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .stat-card {
+    padding: 16px;
+  }
+  .stat-card-value {
+    font-size: 22px;
+  }
+  .leads-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .search-input {
+    width: 100%;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+    padding: 12px 14px;
+  }
+  .filter-pills {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  .filter-pill {
+    white-space: nowrap;
+    padding: 8px 14px;
+  }
+  .table-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 16px;
+  }
+  table {
+    min-width: 680px;
+  }
+}
+
+@media (max-width: 520px) {
+  .login-wrapper {
+    padding: 14px;
+  }
+  .login-card {
+    padding: 26px 18px;
+    border-radius: 20px;
+  }
+  .form-control {
+    font-size: 16px;
+  }
+  .sidebar-menu {
+    width: 100%;
+    order: 3;
+    justify-content: space-between;
+  }
+  .sidebar-link {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+
