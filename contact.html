@@ -68,8 +68,8 @@
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 </div>
                 <div class="contact-detail-content">
-                  <h4>Adresse Physique</h4>
-                  <p>Route de Téniour Km 2.5, 3002 Sfax, Tunisie</p>
+                  <h4>Siège & Localisation</h4>
+                  <p>📍 Sfax, Tunisie</p>
                 </div>
               </div>
 
@@ -245,16 +245,8 @@
         };
         let existing = [];
         try {
-          existing = JSON.parse(localStorage.getItem('lynx_leads_db') || 'null');
-          if (!Array.isArray(existing)) {
-            const dbRes = await fetch('data/db.json');
-            if (dbRes.ok) {
-              const dbData = await dbRes.json();
-              existing = dbData.leads || [];
-            } else {
-              existing = [];
-            }
-          }
+          existing = JSON.parse(localStorage.getItem('lynx_leads_db') || '[]');
+          if (!Array.isArray(existing)) existing = [];
         } catch (e) { existing = []; }
         existing.unshift(newLead);
         localStorage.setItem('lynx_leads_db', JSON.stringify(existing));
