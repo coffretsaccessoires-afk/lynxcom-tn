@@ -414,9 +414,9 @@ const server = http.createServer(async (req, res) => {
     '/ressources': '/ressources.html',
     '/a-propos': '/a-propos.html',
     '/contact': '/contact.html',
-    '/admin': '/admin/index.html',
+    '/admin': '/admin.html',
     '/admin/': '/admin/index.html',
-    '/backoffice': '/admin/index.html',
+    '/backoffice': '/admin.html',
     '/backoffice/': '/admin/index.html'
   };
 

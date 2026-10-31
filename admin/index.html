@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Back-Office Administration & CRM | LynxCom Tunisie</title>
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap">
-  <link rel="stylesheet" href="/admin/style.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
@@ -18,14 +18,14 @@
        ========================================================================== -->
   <div id="loginView" class="login-wrapper">
     <div class="login-card">
-      <img src="/assets/logo-transparent.png" alt="LynxCom" class="login-logo">
+      <img src="../assets/logo-transparent.png" alt="LynxCom" class="login-logo">
       <h1 class="login-title">Espace Administration</h1>
       <p class="login-sub">Authentification à double facteur (Identifiants + Code PIN)</p>
 
       <form id="loginForm">
         <div class="form-group">
           <label for="admUsername">Identifiant ou Email *</label>
-          <input type="text" id="admUsername" class="form-control" placeholder="admin ou admin@lynxcom.tn" value="admin" required autocomplete="username">
+          <input type="text" id="admUsername" class="form-control" placeholder="admin ou touskiecom@gmail.com" value="admin" required autocomplete="username">
         </div>
 
         <div class="form-group">
@@ -45,7 +45,7 @@
         <div id="loginError" style="display:none; margin-top:14px; padding:10px; border-radius:8px; background:#FEE2E2; color:#991B1B; font-size:13px; font-weight:600; text-align:center;"></div>
 
         <div class="login-hint-badge">
-          🔒 <strong>Accès sécurisé réservé à la direction :</strong><br>
+          🔒 <strong>Accès sécurisé réservé à la direction (Sfax) :</strong><br>
           • Identifiant : <code>admin</code><br>
           • Mot de passe : <code>LynxCom2026!</code><br>
           • Code de sécurité : <code>784219</code>
@@ -62,12 +62,12 @@
     <!-- Sidebar -->
     <aside class="admin-sidebar">
       <div class="sidebar-brand">
-        <img src="/assets/logo-darkmode.png" alt="LynxCom" class="sidebar-logo">
+        <img src="../assets/logo-darkmode.png" alt="LynxCom" class="sidebar-logo">
       </div>
 
       <ul class="sidebar-menu">
         <li><a href="#" class="sidebar-link active">📊 Gestion des Prospects</a></li>
-        <li><a href="/" target="_blank" class="sidebar-link">🌐 Voir le Site Web</a></li>
+        <li><a href="../" target="_blank" class="sidebar-link">🌐 Voir le Site Web</a></li>
       </ul>
 
       <div class="admin-user-card">
@@ -86,8 +86,8 @@
       
       <header class="admin-header">
         <div>
-          <h1>Tableau de Bord & CRM Prospects</h1>
-          <p style="font-size:14px; color:#64748B;">Suivi des demandes d'audit et opportunités d'affaires en Tunisie.</p>
+          <h1>Tableau de Bord & CRM Prospects (Sfax, Tunisie)</h1>
+          <p style="font-size:14px; color:#64748B;">Suivi des demandes d'audit et opportunités d'affaires en Tunisie (+216 53 484 809).</p>
         </div>
         <button id="btnExportCSV" class="btn-export-csv">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -148,6 +148,6 @@
     </main>
   </div>
 
-  <script src="/admin/admin.js"></script>
+  <script src="./admin.js"></script>
 </body>
 </html>
