@@ -628,14 +628,6 @@ const server = http.createServer(async (req, res) => {
     safePath = cleanRouteMap[safePath];
   }
 
-  // Universal Google Search Console HTML File Verification Handler (Auto-Verifies touskiecom@gmail.com)
-  const googleMatch = safePath.match(/^\/(google[a-zA-Z0-9_\-]+)\.html$/i);
-  if (googleMatch) {
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=UTF-8', 'Cache-Control': 'no-cache' });
-    res.end(`google-site-verification: ${googleMatch[1]}.html`);
-    return;
-  }
-
   // SECURITY (security-audit): Strictly block public access to data/db.json, config and server files
   const lowerPath = safePath.toLowerCase();
   if (
