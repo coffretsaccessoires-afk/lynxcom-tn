@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap">
-  <link rel="stylesheet" href="admin/style.css?v=3.2">
+  <link rel="stylesheet" href="admin/style.css?v=4.5">
 </head>
 <body>
 
@@ -58,18 +58,19 @@
     <aside class="admin-sidebar">
       <div class="sidebar-brand">
         <img src="assets/logo-darkmode.png" alt="LynxCom" class="sidebar-logo">
-        <span class="admin-topbar-title">Back-Office CRM</span>
+        <span class="admin-topbar-title">Back-Office Direction</span>
       </div>
 
       <ul class="sidebar-menu">
-        <li><a href="#" class="sidebar-link active">📊 Gestion des Prospects</a></li>
-        <li><a href="./" target="_blank" class="sidebar-link">🌐 Voir le Site Web</a></li>
+        <li><a href="#" id="tabInbound" class="sidebar-link active">📥 Demandes Inbound</a></li>
+        <li><a href="#" id="tabOutbound" class="sidebar-link">🚀 Générateur Leads (100/J)</a></li>
+        <li><a href="../" target="_blank" class="sidebar-link">🌐 Voir le Site Web</a></li>
       </ul>
 
       <div class="admin-user-card">
         <div class="user-meta">
-          <div style="font-size:13px; font-weight:800; color:#FFF;" id="sessionUserName">Direction LynxCom</div>
-          <div style="font-size:11px; color:#EBF817;">Session Active</div>
+          <div style="font-size:13px; font-weight:800; color:#FFF;" id="sessionUserName">Mahdi Cherif (Fondateur)</div>
+          <div style="font-size:11px; color:#EBF817;">Session Active • Direction</div>
         </div>
         <button id="btnLogout" class="btn-logout" title="Déconnexion" aria-label="Déconnexion">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -80,73 +81,189 @@
     <!-- Main Dashboard Area -->
     <main class="admin-main">
       
-      <header class="admin-header">
-        <div>
-          <h1>Tableau de Bord & CRM Prospects</h1>
-          <p style="font-size:13px; color:#64748B;">Suivi des demandes d'audit et opportunités d'affaires en Tunisie.</p>
-        </div>
-        <button id="btnExportCSV" class="btn-export-csv">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-          Exporter en CSV (Excel)
-        </button>
-      </header>
+      <!-- ====================================================================
+           VIEW A: INBOUND LEADS (Demandes de contact du site)
+           ==================================================================== -->
+      <div id="inboundSection">
+        <header class="admin-header">
+          <div>
+            <h1>Tableau de Bord Inbound CRM</h1>
+            <p style="font-size:13px; color:#64748B;">Suivi des demandes d'audit et formulaires de contact reçus sur le site.</p>
+          </div>
+          <button id="btnExportCSV" class="btn-export-csv">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Exporter en CSV (Excel)
+          </button>
+        </header>
 
-      <!-- KPI Overview Cards -->
-      <section class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-card-title">Total Demandes</div>
-          <div class="stat-card-value" id="kpiTotalLeads">0</div>
-        </div>
-        <div class="stat-card" style="border-top: 3px solid #EBF817;">
-          <div class="stat-card-title">Nouveaux</div>
-          <div class="stat-card-value" id="kpiNewLeads" style="color:#B45309;">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card-title">Pipeline Estimé</div>
-          <div class="stat-card-value" id="kpiPipeline">0 TND</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card-title">Conversion</div>
-          <div class="stat-card-value" id="kpiConversion" style="color:#059669;">0%</div>
-        </div>
-      </section>
+        <!-- KPI Overview Cards -->
+        <section class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-title">Total Demandes</div>
+            <div class="stat-card-value" id="kpiTotalLeads">0</div>
+          </div>
+          <div class="stat-card" style="border-top: 3px solid #EBF817;">
+            <div class="stat-card-title">Nouveaux</div>
+            <div class="stat-card-value" id="kpiNewLeads" style="color:#B45309;">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-title">Pipeline Estimé</div>
+            <div class="stat-card-value" id="kpiPipeline">0 TND</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-title">Conversion</div>
+            <div class="stat-card-value" id="kpiConversion" style="color:#059669;">0%</div>
+          </div>
+        </section>
 
-      <!-- Toolbar: Search & Filter Pills -->
-      <div class="leads-toolbar">
-        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Rechercher un prospect, société, tel...">
-        <div class="filter-pills">
-          <button class="filter-pill active" data-filter="all">Tous</button>
-          <button class="filter-pill" data-filter="nouveau">Nouveaux</button>
-          <button class="filter-pill" data-filter="en_cours">En cours</button>
-          <button class="filter-pill" data-filter="converti">Convertis</button>
+        <!-- Toolbar: Search & Filter Pills -->
+        <div class="leads-toolbar">
+          <input type="text" id="searchInput" class="search-input" placeholder="🔍 Rechercher un prospect, société, tel...">
+          <div class="filter-pills">
+            <button class="filter-pill active" data-filter="all">Tous</button>
+            <button class="filter-pill" data-filter="nouveau">Nouveaux</button>
+            <button class="filter-pill" data-filter="en_cours">En cours</button>
+            <button class="filter-pill" data-filter="converti">Convertis</button>
+          </div>
         </div>
+
+        <!-- Desktop Table -->
+        <div class="table-card desktop-table-only">
+          <table>
+            <thead>
+              <tr>
+                <th>Réf / Date</th>
+                <th>Contact &amp; Société</th>
+                <th>Téléphone Tunisie</th>
+                <th>Objectif &amp; Budget</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTableBody">
+              <tr><td colspan="6" style="text-align:center; padding:30px;">Chargement sécurisé des prospects...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Touch-Cards Deck -->
+        <div id="leadsMobileCards" class="mobile-cards-only"></div>
       </div>
 
-      <!-- Desktop Table (Visible on Tablets & Desktops > 768px) -->
-      <div class="table-card desktop-table-only">
-        <table>
-          <thead>
-            <tr>
-              <th>Réf / Date</th>
-              <th>Contact & Société</th>
-              <th>Téléphone Tunisie</th>
-              <th>Objectif & Budget</th>
-              <th>Statut</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="leadsTableBody">
-            <tr><td colspan="6" style="text-align:center; padding:30px;">Chargement sécurisé des prospects...</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <!-- ====================================================================
+           VIEW B: OUTBOUND 100 LEADS/DAY GENERATOR & COLD OUTREACH
+           ==================================================================== -->
+      <div id="outboundSection" style="display:none;">
+        <header class="admin-header">
+          <div>
+            <h1 style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              🚀 Générateur Automatique de Leads B2B &amp; Prospection
+              <span style="font-size:12px; font-weight:800; background:#EBF817; color:#0B0F19; padding:4px 10px; border-radius:999px;">100 / Jour</span>
+            </h1>
+            <p style="font-size:13px; color:#64748B;">Détection d'entreprises tunisiennes (Sfax, Grand Tunis, Sousse, etc.) avec propositions par email professionnelles.</p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <button id="btnGenerate100" class="btn-export-csv" style="background:#EBF817; color:#0B0F19; border:none; font-weight:800;">
+              ⚡ Générer 100 Nouveaux Leads
+            </button>
+            <button id="btnSendBatch" class="btn-export-csv" style="background:#0F172A; color:#FFFFFF; border:none; font-weight:700;">
+              ✉️ Envoyer les Emails en Attente (<span id="batchPendingCount">0</span>)
+            </button>
+            <button id="btnToggleAuto" class="btn-export-csv" style="background:#F1F5F9; color:#0F172A; border:1px solid #CBD5E1; font-weight:700;">
+              ⚙️ Auto-Pilote: <span id="autoStatusBadge" style="color:#10B981; font-weight:800;">Actif 🟢</span>
+            </button>
+          </div>
+        </header>
 
-      <!-- Mobile Touch-Cards Deck (Visible on Smartphones <= 768px) -->
-      <div id="leadsMobileCards" class="mobile-cards-only"></div>
+        <!-- Outbound KPI Cards -->
+        <section class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-title">Total Leads Générés</div>
+            <div class="stat-card-value" id="kpiOutboundTotal">0</div>
+          </div>
+          <div class="stat-card" style="border-top: 3px solid #F59E0B;">
+            <div class="stat-card-title">Prêts à Envoyer</div>
+            <div class="stat-card-value" id="kpiOutboundPending" style="color:#D97706;">0</div>
+          </div>
+          <div class="stat-card" style="border-top: 3px solid #10B981;">
+            <div class="stat-card-title">Emails Envoyés</div>
+            <div class="stat-card-value" id="kpiOutboundSent" style="color:#059669;">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-title">Taux d'Ouverture Estimé</div>
+            <div class="stat-card-value" id="kpiOutboundOpenRate" style="color:#2563EB;">48.2%</div>
+          </div>
+        </section>
+
+        <!-- Progress Banner -->
+        <div id="batchProgressBanner" style="display:none; margin-bottom:20px; padding:14px 20px; border-radius:12px; background:#0B0F19; color:#FFF; font-size:13px; font-weight:700; align-items:center; justify-content:space-between;">
+          <span id="batchProgressText">🚀 Envoi en cours des propositions d'audit personnalisé...</span>
+          <span id="batchProgressPercent" style="color:#EBF817; font-weight:800;">0%</span>
+        </div>
+
+        <!-- Outbound Toolbar: Search & Sectors -->
+        <div class="leads-toolbar">
+          <input type="text" id="searchOutboundInput" class="search-input" placeholder="🔍 Rechercher une société, décideur, ville (Sfax, Tunis...)...">
+          <div class="filter-pills" id="outboundSectorFilters">
+            <button class="filter-pill active" data-sector="all">Tous les Secteurs</button>
+            <button class="filter-pill" data-sector="E-Commerce &amp; Retail">E-Commerce</button>
+            <button class="filter-pill" data-sector="Agroalimentaire &amp; Huile d'Olive (Export)">Agroalimentaire Sfax</button>
+            <button class="filter-pill" data-sector="Industrie &amp; B2B">Industrie B2B</button>
+            <button class="filter-pill" data-sector="Santé &amp; Cliniques Privées">Santé &amp; Cliniques</button>
+            <button class="filter-pill" data-sector="Immobilier &amp; Promoteurs">Immobilier</button>
+          </div>
+        </div>
+
+        <!-- Desktop Outbound Table -->
+        <div class="table-card desktop-table-only">
+          <table>
+            <thead>
+              <tr>
+                <th>Date / Ville</th>
+                <th>Entreprise &amp; Secteur</th>
+                <th>Décideur &amp; Email</th>
+                <th>Besoin &amp; Diagnostic</th>
+                <th>Statut Email</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="outboundTableBody">
+              <tr><td colspan="6" style="text-align:center; padding:30px;">Chargement des leads du jour...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Touch-Cards Deck for Outbound -->
+        <div id="outboundMobileCards" class="mobile-cards-only"></div>
+      </div>
 
     </main>
   </div>
 
-  <script src="admin/admin.js?v=3.2"></script>
+  <!-- ==========================================================================
+       MODAL: APERÇU EMAIL DE PROSPECTION PROFESSIONNEL
+       ========================================================================== -->
+  <div id="modalEmailPreview" style="display:none; position:fixed; inset:0; background:rgba(11,15,25,0.7); backdrop-filter:blur(6px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#FFFFFF; border-radius:20px; width:100%; max-width:680px; box-shadow:0 20px 60px rgba(0,0,0,0.3); overflow:hidden; display:flex; flex-direction:column; max-height:90vh;">
+      <div style="padding:18px 24px; border-bottom:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; background:#F8FAFC;">
+        <div>
+          <div style="font-weight:800; font-size:16px; color:#0B0F19;" id="modalSubject">Aperçu Email LynxCom</div>
+          <div style="font-size:12px; color:#64748B;" id="modalRecipient">À: contact@societe.tn</div>
+        </div>
+        <button id="btnCloseModal" style="background:transparent; border:none; font-size:24px; cursor:pointer; color:#64748B;">&times;</button>
+      </div>
+      <div style="padding:24px; overflow-y:auto; flex:1; font-size:14.5px; line-height:1.7; color:#1E293B;" id="modalEmailBody">
+        <!-- Injected via JavaScript -->
+      </div>
+      <div style="padding:16px 24px; border-top:1px solid #E2E8F0; background:#F8FAFC; display:flex; justify-content:flex-end; gap:12px;">
+        <button id="btnCloseModalBtn" style="padding:10px 18px; border-radius:10px; border:1px solid #CBD5E1; background:#FFF; font-weight:700; cursor:pointer;">Fermer</button>
+        <button id="btnSendFromModal" style="padding:10px 22px; border-radius:10px; border:none; background:#EBF817; color:#0B0F19; font-weight:800; cursor:pointer;">
+          🚀 Envoyer cet Email Immédiatement
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin/admin.js?v=4.5"></script>
 </body>
 </html>

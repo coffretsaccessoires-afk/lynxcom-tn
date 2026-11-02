@@ -406,6 +406,434 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // ==============================================================================
+  // 9. OUTBOUND LEAD GENERATOR & AUTOMATED 100/DAY COLD OUTREACH ENGINE
+  // ==============================================================================
+  const tabInbound = document.getElementById('tabInbound');
+  const tabOutbound = document.getElementById('tabOutbound');
+  const inboundSection = document.getElementById('inboundSection');
+  const outboundSection = document.getElementById('outboundSection');
+
+  let allOutboundLeads = [];
+  let outboundSectorFilter = 'all';
+  let activePreviewLeadId = null;
+
+  // Tab Switcher
+  if (tabInbound && tabOutbound) {
+    tabInbound.addEventListener('click', function (e) {
+      e.preventDefault();
+      tabInbound.classList.add('active');
+      tabOutbound.classList.remove('active');
+      if (inboundSection) inboundSection.style.display = 'block';
+      if (outboundSection) outboundSection.style.display = 'none';
+    });
+
+    tabOutbound.addEventListener('click', function (e) {
+      e.preventDefault();
+      tabOutbound.classList.add('active');
+      tabInbound.classList.remove('active');
+      if (inboundSection) inboundSection.style.display = 'none';
+      if (outboundSection) outboundSection.style.display = 'block';
+      loadOutboundLeads();
+    });
+  }
+
+  // Load Outbound Leads
+  async function loadOutboundLeads() {
+    try {
+      const res = await fetch('/api/admin/outbound/leads', {
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      });
+      if (res.status === 401) {
+        showLogin();
+        return;
+      }
+      const data = await res.json();
+      if (data && data.leads) {
+        allOutboundLeads = data.leads;
+        updateOutboundKPIs(data);
+        renderOutboundLeads();
+      }
+    } catch (e) {
+      console.error('Erreur chargement leads outbound:', e);
+    }
+  }
+
+  function updateOutboundKPIs(data) {
+    const totalElem = document.getElementById('kpiOutboundTotal');
+    const pendingElem = document.getElementById('kpiOutboundPending');
+    const sentElem = document.getElementById('kpiOutboundSent');
+    const countBadge = document.getElementById('batchPendingCount');
+    const autoBadge = document.getElementById('autoStatusBadge');
+
+    const total = allOutboundLeads.length;
+    const pending = allOutboundLeads.filter(l => l.status === 'prete').length;
+    const sent = allOutboundLeads.filter(l => l.status === 'envoye').length;
+
+    if (totalElem) totalElem.textContent = total;
+    if (pendingElem) pendingElem.textContent = pending;
+    if (sentElem) sentElem.textContent = sent;
+    if (countBadge) countBadge.textContent = pending;
+
+    if (autoBadge && data.config) {
+      if (data.config.autoDaily !== false) {
+        autoBadge.textContent = 'Actif 🟢';
+        autoBadge.style.color = '#10B981';
+      } else {
+        autoBadge.textContent = 'Pause ⚪';
+        autoBadge.style.color = '#94A3B8';
+      }
+    }
+  }
+
+  function renderOutboundLeads() {
+    const tableBody = document.getElementById('outboundTableBody');
+    const mobileContainer = document.getElementById('outboundMobileCards');
+    const searchVal = (document.getElementById('searchOutboundInput')?.value || '').toLowerCase().trim();
+
+    if (!tableBody && !mobileContainer) return;
+
+    let filtered = allOutboundLeads.filter(lead => {
+      // Sector filter
+      if (outboundSectorFilter !== 'all' && lead.sector !== outboundSectorFilter) {
+        return false;
+      }
+      // Search query
+      if (searchVal) {
+        const hay = `${lead.company} ${lead.contactName} ${lead.city} ${lead.email} ${lead.identifiedGap || ''}`.toLowerCase();
+        if (!hay.includes(searchVal)) return false;
+      }
+      return true;
+    });
+
+    // 1. Desktop Table
+    if (tableBody) {
+      if (filtered.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:36px; color:#64748B;">Aucun prospect correspondant aux critères.</td></tr>`;
+      } else {
+        tableBody.innerHTML = filtered.map(lead => {
+          const isSent = lead.status === 'envoye';
+          const statusBadge = isSent 
+            ? `<span style="background:rgba(16,185,129,0.12); color:#059669; padding:4px 10px; border-radius:20px; font-weight:800; font-size:12px;">Envoyé ✉️</span>`
+            : `<span style="background:rgba(245,158,11,0.12); color:#D97706; padding:4px 10px; border-radius:20px; font-weight:800; font-size:12px;">Prêt à envoyer</span>`;
+
+          return `
+            <tr>
+              <td style="font-size:12.5px; color:#64748B;">
+                <strong>${lead.city || 'Tunisie'}</strong><br>
+                <span>Score: <strong style="color:#059669;">${lead.opportunityScore || 90}%</strong></span>
+              </td>
+              <td>
+                <div style="font-weight:800; color:#0B0F19; font-size:14px;">${escapeHTML(lead.company)}</div>
+                <div style="font-size:11.5px; color:#64748B;">${escapeHTML(lead.sector || '')}</div>
+                ${lead.website ? `<a href="https://${lead.website}" target="_blank" style="font-size:11px; color:#2563EB;">${lead.website}</a>` : ''}
+              </td>
+              <td>
+                <div style="font-weight:700; color:#0B0F19; font-size:13px;">${escapeHTML(lead.contactName)}</div>
+                <div style="font-size:11px; color:#64748B;">${escapeHTML(lead.contactRole || 'Direction')}</div>
+                <div style="font-size:11.5px; color:#475569;">${escapeHTML(lead.email)}</div>
+              </td>
+              <td style="max-width:240px; font-size:12px; color:#475569; line-height:1.4;">
+                ${escapeHTML(lead.identifiedGap || 'Optimisation ROI publicitaire')}
+              </td>
+              <td>
+                ${statusBadge}
+                ${lead.sentAt ? `<div style="font-size:10.5px; color:#94A3B8; margin-top:3px;">${new Date(lead.sentAt).toLocaleTimeString('fr-TN', {hour:'2-digit', minute:'2-digit'})}</div>` : ''}
+              </td>
+              <td>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn-action-preview" data-id="${lead.id}" style="padding:6px 10px; border-radius:8px; border:1px solid #CBD5E1; background:#FFF; font-size:12px; font-weight:700; cursor:pointer;" title="Aperçu de l'email">
+                    👁️ Aperçu
+                  </button>
+                  ${!isSent ? `
+                    <button class="btn-action-sendone" data-id="${lead.id}" style="padding:6px 10px; border-radius:8px; border:none; background:#EBF817; color:#0B0F19; font-size:12px; font-weight:800; cursor:pointer;" title="Envoyer immédiatement">
+                      ✉️ Envoyer
+                    </button>
+                  ` : ''}
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    // 2. Mobile Cards
+    if (mobileContainer) {
+      if (filtered.length === 0) {
+        mobileContainer.innerHTML = `<div style="text-align:center; padding:30px; color:#64748B;">Aucun prospect trouvé.</div>`;
+      } else {
+        mobileContainer.innerHTML = filtered.map(lead => {
+          const isSent = lead.status === 'envoye';
+          return `
+            <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:16px; padding:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+                <div>
+                  <div style="font-weight:900; font-size:15px; color:#0B0F19;">${escapeHTML(lead.company)}</div>
+                  <div style="font-size:11.5px; color:#64748B;">${escapeHTML(lead.city || 'Tunisie')} • ${escapeHTML(lead.sector || '')}</div>
+                </div>
+                <span style="font-size:11px; font-weight:800; padding:3px 8px; border-radius:12px; ${isSent ? 'background:#DCFCE7; color:#15803D;' : 'background:#FEF3C7; color:#B45309;'}">
+                  ${isSent ? 'Envoyé ✉️' : 'Prêt'}
+                </span>
+              </div>
+              <div style="font-size:13px; color:#334155; margin-bottom:6px;">
+                <strong>Contact :</strong> ${escapeHTML(lead.contactName)} (${escapeHTML(lead.contactRole || 'Direction')})
+              </div>
+              <div style="font-size:12.5px; color:#475569; margin-bottom:8px;">
+                <strong>Email :</strong> ${escapeHTML(lead.email)}
+              </div>
+              <div style="background:#F8FAFC; border-radius:10px; padding:10px; font-size:12px; color:#475569; margin-bottom:12px;">
+                <strong>Besoin :</strong> ${escapeHTML(lead.identifiedGap || 'Optimisation ROI publicitaire')}
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn-action-preview" data-id="${lead.id}" style="flex:1; padding:9px; border-radius:8px; border:1px solid #CBD5E1; background:#FFF; font-weight:700; font-size:12.5px; cursor:pointer;">
+                  👁️ Aperçu Email
+                </button>
+                ${!isSent ? `
+                  <button class="btn-action-sendone" data-id="${lead.id}" style="flex:1; padding:9px; border-radius:8px; border:none; background:#EBF817; color:#0B0F19; font-weight:800; font-size:12.5px; cursor:pointer;">
+                    ✉️ Envoyer
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // Attach Listeners for Preview and Single Send buttons
+    document.querySelectorAll('.btn-action-preview').forEach(btn => {
+      btn.addEventListener('click', () => previewEmail(btn.getAttribute('data-id')));
+    });
+
+    document.querySelectorAll('.btn-action-sendone').forEach(btn => {
+      btn.addEventListener('click', () => sendOneEmail(btn.getAttribute('data-id'), btn));
+    });
+  }
+
+  // Generate 100 Leads Action
+  const btnGen100 = document.getElementById('btnGenerate100');
+  if (btnGen100) {
+    btnGen100.addEventListener('click', async function () {
+      btnGen100.disabled = true;
+      btnGen100.textContent = '⏳ Génération de 100 leads en cours...';
+      try {
+        const res = await fetch('/api/admin/outbound/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ count: 100, autoSend: false })
+        });
+        const data = await res.json();
+        if (data && data.success) {
+          alert(`✅ Succès ! ${data.addedCount || 100} nouveaux prospects tunisiens qualifiés ont été générés.`);
+          loadOutboundLeads();
+        } else {
+          alert(data.error || 'Erreur lors de la génération.');
+        }
+      } catch (e) {
+        alert('Erreur réseau lors de la génération des leads.');
+      } finally {
+        btnGen100.disabled = false;
+        btnGen100.textContent = '⚡ Générer 100 Nouveaux Leads';
+      }
+    });
+  }
+
+  // Batch Send Emails Action
+  const btnBatch = document.getElementById('btnSendBatch');
+  const batchBanner = document.getElementById('batchProgressBanner');
+  const batchPercent = document.getElementById('batchProgressPercent');
+
+  if (btnBatch) {
+    btnBatch.addEventListener('click', async function () {
+      const pendingCount = allOutboundLeads.filter(l => l.status === 'prete').length;
+      if (pendingCount === 0) {
+        alert('Tous les prospects de la liste ont déjà reçu leur email.');
+        return;
+      }
+
+      if (!confirm(`Confirmez-vous l'envoi immédiat de ${pendingCount} emails de prospection personnalisés ?`)) {
+        return;
+      }
+
+      btnBatch.disabled = true;
+      if (batchBanner) {
+        batchBanner.style.display = 'flex';
+        batchPercent.textContent = '0%';
+      }
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        if (progress < 90) {
+          progress += 10;
+          if (batchPercent) batchPercent.textContent = progress + '%';
+        }
+      }, 200);
+
+      try {
+        const res = await fetch('/api/admin/outbound/send-batch', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify({ limit: 100 })
+        });
+        clearInterval(interval);
+        if (batchPercent) batchPercent.textContent = '100%';
+
+        const data = await res.json();
+        if (data && data.success) {
+          setTimeout(() => {
+            if (batchBanner) batchBanner.style.display = 'none';
+            alert(`🎉 Campagne Outbound réussie ! ${data.sentCount} emails professionnels ont été envoyés avec succès.`);
+            loadOutboundLeads();
+          }, 500);
+        } else {
+          alert(data.error || 'Erreur lors de l’envoi groupé.');
+          if (batchBanner) batchBanner.style.display = 'none';
+        }
+      } catch (e) {
+        clearInterval(interval);
+        if (batchBanner) batchBanner.style.display = 'none';
+        alert('Erreur lors de l’envoi des emails.');
+      } finally {
+        btnBatch.disabled = false;
+      }
+    });
+  }
+
+  // Toggle Auto-Pilot
+  const btnToggleAuto = document.getElementById('btnToggleAuto');
+  if (btnToggleAuto) {
+    btnToggleAuto.addEventListener('click', async function () {
+      try {
+        const res = await fetch('/api/admin/outbound/toggle-auto', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const data = await res.json();
+        if (data && data.success) {
+          const autoBadge = document.getElementById('autoStatusBadge');
+          if (autoBadge) {
+            if (data.autoDaily) {
+              autoBadge.textContent = 'Actif 🟢';
+              autoBadge.style.color = '#10B981';
+            } else {
+              autoBadge.textContent = 'Pause ⚪';
+              autoBadge.style.color = '#94A3B8';
+            }
+          }
+          alert(`Auto-Pilote quotidien 100 leads/jour : ${data.autoDaily ? 'ACTIVÉ 🟢' : 'MIS EN PAUSE ⚪'}`);
+        }
+      } catch (e) {
+        alert('Erreur lors du changement de statut de l’auto-pilote.');
+      }
+    });
+  }
+
+  // Preview Email Modal
+  const modal = document.getElementById('modalEmailPreview');
+  const btnCloseModal = document.getElementById('btnCloseModal');
+  const btnCloseModalBtn = document.getElementById('btnCloseModalBtn');
+  const btnSendFromModal = document.getElementById('btnSendFromModal');
+
+  async function previewEmail(leadId) {
+    activePreviewLeadId = leadId;
+    try {
+      const res = await fetch(`/api/admin/outbound/preview/${leadId}`, {
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      });
+      const data = await res.json();
+      if (data && data.email) {
+        document.getElementById('modalSubject').textContent = data.email.subject;
+        document.getElementById('modalRecipient').textContent = `À: ${data.lead.contactName} <${data.lead.email}> (${data.lead.company})`;
+        document.getElementById('modalEmailBody').innerHTML = data.email.htmlBody;
+        if (modal) modal.style.display = 'flex';
+      }
+    } catch (e) {
+      alert('Impossible de générer l’aperçu de cet email.');
+    }
+  }
+
+  if (btnCloseModal) btnCloseModal.addEventListener('click', () => modal.style.display = 'none');
+  if (btnCloseModalBtn) btnCloseModalBtn.addEventListener('click', () => modal.style.display = 'none');
+
+  if (btnSendFromModal) {
+    btnSendFromModal.addEventListener('click', async function () {
+      if (!activePreviewLeadId) return;
+      btnSendFromModal.disabled = true;
+      btnSendFromModal.textContent = 'Envoi en cours...';
+      try {
+        const res = await fetch(`/api/admin/outbound/send-one/${activePreviewLeadId}`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        const data = await res.json();
+        if (data && data.success) {
+          alert('Email envoyé avec succès au dirigeant !');
+          modal.style.display = 'none';
+          loadOutboundLeads();
+        } else {
+          alert(data.error || 'Erreur lors de l’envoi.');
+        }
+      } catch (e) {
+        alert('Erreur réseau lors de l’envoi de l’email.');
+      } finally {
+        btnSendFromModal.disabled = false;
+        btnSendFromModal.textContent = '🚀 Envoyer cet Email Immédiatement';
+      }
+    });
+  }
+
+  async function sendOneEmail(leadId, btn) {
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = '...';
+    }
+    try {
+      const res = await fetch(`/api/admin/outbound/send-one/${leadId}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      });
+      const data = await res.json();
+      if (data && data.success) {
+        loadOutboundLeads();
+      } else {
+        alert(data.error || 'Erreur lors de l’envoi.');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = '✉️ Envoyer';
+        }
+      }
+    } catch (e) {
+      alert('Erreur réseau.');
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = '✉️ Envoyer';
+      }
+    }
+  }
+
+  // Filter Pills for Outbound Sectors
+  const sectorPills = document.querySelectorAll('#outboundSectorFilters .filter-pill');
+  sectorPills.forEach(pill => {
+    pill.addEventListener('click', function () {
+      sectorPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      outboundSectorFilter = pill.getAttribute('data-sector') || 'all';
+      renderOutboundLeads();
+    });
+  });
+
+  const searchOutbound = document.getElementById('searchOutboundInput');
+  if (searchOutbound) {
+    searchOutbound.addEventListener('input', renderOutboundLeads);
+  }
+
   // Utility: Escape HTML
   function escapeHTML(str) {
     if (!str) return '';

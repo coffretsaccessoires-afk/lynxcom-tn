@@ -1,21 +1,24 @@
-# Robots.txt for LynxCom Digital Marketing Agency Tunisia (https://lynxcom.tn)
+# Robots.txt for LynxCom - Agence de Marketing en Tunisie
 User-agent: *
 Allow: /
 Allow: /assets/
 Allow: /css/
 Allow: /js/
 
-# Sitemaps
+# Disallow admin backoffice & API routes from search indexing
+Disallow: /admin
+Disallow: /admin/
+Disallow: /backoffice
+Disallow: /backoffice/
+Disallow: /api/
+Disallow: /data/
+
+# XML Sitemaps
+Sitemap: https://lynxcom.onrender.com/sitemap.xml
 Sitemap: https://lynxcom.tn/sitemap.xml
 
-# Crawl-delay for optimal indexing
-Crawl-delay: 1
-
-# Search engines specific
+# Crawlers
 User-agent: Googlebot
-Allow: /
-
-User-agent: Googlebot-Mobile
 Allow: /
 
 User-agent: Googlebot-Image
