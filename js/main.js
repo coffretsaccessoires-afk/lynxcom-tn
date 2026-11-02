@@ -236,4 +236,100 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // --- 7. Universal Touch & Click Carousel Controller (UI/UX Pro Max) ---
+  function initCarousels() {
+    const carousels = document.querySelectorAll('.carousel-container');
+    carousels.forEach(carousel => {
+      const track = carousel.querySelector('.carousel-track');
+      const prevBtn = carousel.querySelector('.carousel-arrow-btn.prev');
+      const nextBtn = carousel.querySelector('.carousel-arrow-btn.next');
+      const dotsContainer = carousel.querySelector('.carousel-dots');
+      if (!track) return;
+
+      const items = track.children;
+      if (!items.length) return;
+
+      // Populate interactive indicator dots
+      if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < items.length; i++) {
+          const dot = document.createElement('span');
+          dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+          dot.setAttribute('data-index', i);
+          dot.setAttribute('aria-label', `Aller à la diapositive ${i + 1}`);
+          dot.addEventListener('click', () => {
+            const itemWidth = items[0].getBoundingClientRect().width + 20;
+            track.scrollTo({ left: i * itemWidth, behavior: 'smooth' });
+          });
+          dotsContainer.appendChild(dot);
+        }
+      }
+
+      function updateActiveDot() {
+        const itemWidth = items[0].getBoundingClientRect().width + 20;
+        const index = Math.round(track.scrollLeft / itemWidth);
+        if (dotsContainer) {
+          const dots = dotsContainer.querySelectorAll('.carousel-dot');
+          dots.forEach((d, idx) => {
+            d.classList.toggle('active', idx === Math.min(index, items.length - 1));
+          });
+        }
+        if (prevBtn) prevBtn.disabled = track.scrollLeft <= 5;
+        if (nextBtn) nextBtn.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 5;
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          const itemWidth = items[0].getBoundingClientRect().width + 20;
+          track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          const itemWidth = items[0].getBoundingClientRect().width + 20;
+          track.scrollBy({ left: itemWidth, behavior: 'smooth' });
+        });
+      }
+
+      track.addEventListener('scroll', updateActiveDot, { passive: true });
+      updateActiveDot();
+
+      // Desktop Mouse Drag to Swipe
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      track.addEventListener('mousedown', (e) => {
+        isDown = true;
+        track.style.cursor = 'grabbing';
+        track.style.scrollSnapType = 'none';
+        startX = e.pageX - track.offsetLeft;
+        scrollLeft = track.scrollLeft;
+      });
+      track.addEventListener('mouseleave', () => {
+        if (!isDown) return;
+        isDown = false;
+        track.style.cursor = 'grab';
+        track.style.scrollSnapType = 'x mandatory';
+      });
+      track.addEventListener('mouseup', () => {
+        if (!isDown) return;
+        isDown = false;
+        track.style.cursor = 'grab';
+        track.style.scrollSnapType = 'x mandatory';
+        updateActiveDot();
+      });
+      track.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - track.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        track.scrollLeft = scrollLeft - walk;
+      });
+    });
+  }
+
+  initCarousels();
+
 });

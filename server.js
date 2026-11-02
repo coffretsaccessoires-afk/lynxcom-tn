@@ -53,7 +53,10 @@ const MIME_TYPES = {
   '.webmanifest': 'application/manifest+json',
   '.xml': 'application/xml; charset=UTF-8',
   '.txt': 'text/plain; charset=UTF-8',
-  '.csv': 'text/csv; charset=UTF-8'
+  '.csv': 'text/csv; charset=UTF-8',
+  '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
+  '.webp': 'image/webp'
 };
 
 // Helper: Parse JSON body
@@ -690,6 +693,26 @@ const server = http.createServer(async (req, res) => {
 
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+
+    // Support HTTP Range requests for video/audio streaming (Safari iOS / Chrome)
+    if (req.headers.range && (ext === '.mp4' || ext === '.webm')) {
+      const range = req.headers.range;
+      const fileSize = stats.size;
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      const chunksize = (end - start) + 1;
+      const file = fs.createReadStream(filePath, { start, end });
+      res.writeHead(206, {
+        'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunksize,
+        'Content-Type': contentType,
+        'Cache-Control': 'public, max-age=86400'
+      });
+      file.pipe(res);
+      return;
+    }
 
     let cacheHeader = 'public, max-age=86400';
     if (ext === '.html' || ext === '.css' || ext === '.js') {
