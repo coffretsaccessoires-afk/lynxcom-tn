@@ -3,4 +3,7 @@ node_modules/
 Thumbs.db
 *.log
 .gemini/
-
+security-audit-skill-main/
+superpowers-main/
+ui-ux-pro-max-skill-main/
+*.zip
